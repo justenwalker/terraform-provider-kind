@@ -1,5 +1,6 @@
 .DS_Store
 terraform-provider-kind
+terraform-provider-kind_*
 bin
 
 # Local .terraform directories
