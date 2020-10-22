@@ -2,6 +2,7 @@
 terraform-provider-kind
 terraform-provider-kind_*
 bin
+dist/
 
 # Local .terraform directories
 **/.terraform/*
