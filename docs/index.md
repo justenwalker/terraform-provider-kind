@@ -1,22 +1,30 @@
+---
+layout: ""
+page_title: "Provider: Kind"
+description: |-
+  Terraform provider for managing Kind clusters
+---
+
 # Kind Provider
 
 Terraform provider for managing [Kind](https://kind.sigs.k8s.io/) clusters (Kubernetes clusters using Docker).
 
 ## Example Usage
 
-```hcl
+```terraform
 # Initialize the kind provider using 'docker' backend
 # and overriding which kubeconfig will be updated with
 # configuration for connecting to the provisioned clusers
 provider "kind" {
-	provider   = "docker"
-	kubeconfig = pathexpand("~/.kube/kind-config")
+  provider   = "docker"
+  kubeconfig = pathexpand("~/.kube/kind-config")
 }
-
 ```
 
-## Argument Reference
+## Schema
 
-- `provider` - (Optional) The provider used to run the containers. Can be either `docker` or `podman` (Default: `docker`)
-- `kubeconfig` - (Optional) Path to the kubeconfig to add/update contexts. (Default: `KUBECONFIG` env)
-- `verbosity` - (Optional) Set logging verbosity (Default: `0`)
+### Optional
+
+- **kubeconfig** (String, Optional) Sets kubeconfig path instead of $KUBECONFIG or $HOME/.kube/config
+- **provider** (String, Optional) The provider used to run the containers. Can be either `docker` or `podman`
+- **verbosity** (Number, Optional) Sets the logging verbosity. larger number means more logs.

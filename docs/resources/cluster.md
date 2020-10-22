@@ -1,4 +1,11 @@
-# Cluster Resource
+---
+layout: ""
+page_title: "Resource: Cluster"
+description: |-
+    Manage a Kind Cluster
+---
+
+# Kind Provider
 
 This resource creates a cluster.
 
@@ -6,12 +13,12 @@ This resource creates a cluster.
 
 ## Example Usage
 
-```hcl
+```terraform
 # Create a test cluster named "test" with a control-plane and
 # two workers using the inline config argument
 resource "kind_cluster" "new" {
-	name = "test"
-	config = <<-EOF
+  name = "test"
+  config = <<-EOF
         apiVersion: kind.x-k8s.io/v1alpha4
         kind: Cluster
         nodes:
@@ -22,21 +29,33 @@ resource "kind_cluster" "new" {
 }
 ```
 
-## Argument Reference
+## Schema
 
-* `name` - (Required) The name of the cluster.
-* `config` - (Optional) [cluster config](https://www.terraform.io/docs/registry/providers/docs.html) used for customizing cluster creation.
-* `image` - (Optional) The image to use for the kind nodes. corresponds to the `--image` flag on the cli.
+### Required
 
-## Attribute Reference
+- **name** (String, Required) the name of the cluster. corresponds to the --name flag on the kind cli.
 
-* `kubeconfig` - yaml string contianing the kubeconfig connection details for connecting to this cluster
-* `nodes` - A list of cluster nodes. See the [Nodes](#nodes) section
+### Optional
 
-## Nodes
+- **config** (String, Optional) the cluster config as documented on https://kind.sigs.k8s.io/docs/user/configuration/
+- **id** (String, Optional) The ID of this resource.
+- **image** (String, Optional) The image to use for the kind nodes. corresponds to the --image flag on the cli.
+- **image_version** (String, Optional) Kubernetes major.minor version, which chooses the correct node image from the published SHAs matching this version of KIND
 
-* `name` - Name of the cluster node. Usually corresponds with the container name (in docker/podman)
-* `role` - The node's role, `worker` or `control-plane`
-* `ipv4_address` - The internal ipv4 address of the node.
-* `ipv6_address` - The internal ipv6 address of the node.
+### Read-only
 
+- **ca_certificate_data** (String, Read-only) The base64-encoded CA Certificate used by the API Server
+- **client_certificate_data** (String, Read-only) The base64-encoded client certificate data for connecting the cluster
+- **client_key_data** (String, Read-only) The base64-encoded client private key data for connecting the cluster
+- **context** (String, Read-only) The name of the context in KubeConfig
+- **kubeconfig** (String, Read-only) The full text of the kubeconfig that can be used to connect to this cluster
+- **nodes** (List of Object, Read-only) The list of nodes that were provisioned for this cluster (see [below for nested schema](#nestedatt--nodes))
+- **server** (String, Read-only) Kubernetes API Server URL
+
+<a id="nestedatt--nodes"></a>
+### Nested Schema for `nodes`
+
+- **ipv4_address** (String)
+- **ipv6_address** (String)
+- **name** (String)
+- **role** (String)
