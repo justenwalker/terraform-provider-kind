@@ -1,0 +1,18 @@
+---
+layout: ""
+page_title: "Resource: Cluster"
+description: |-
+    Manage a Kind Cluster
+---
+
+# Kind Provider
+
+This resource creates a cluster.
+
+~> This resource does not support update. Any change will result in a cluster re-build.
+
+## Example Usage
+
+{{tffile "examples/resources/cluster/resource.tf"}}
+
+{{ .SchemaMarkdown | trimspace }}
