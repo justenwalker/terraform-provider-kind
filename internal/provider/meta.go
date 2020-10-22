@@ -3,6 +3,7 @@ package provider
 import (
 	"fmt"
 	"sigs.k8s.io/kind/pkg/cluster"
+	"sort"
 	"strings"
 )
 
@@ -57,5 +58,9 @@ func (m *Meta) getKindNodeList(name string) ([]map[string]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
+	// so we get a predictable order
+	sort.Slice(nodes, func(i, j int) bool {
+		return strings.Compare(nodes[i].String(),nodes[j].String()) < 0
+	})
 	return mapKindNodeList(nodes)
 }

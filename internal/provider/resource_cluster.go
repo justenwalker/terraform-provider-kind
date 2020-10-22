@@ -15,37 +15,7 @@ func resourceCluster() *schema.Resource {
 		CreateContext: resourceClusterCreate,
 		DeleteContext: resourceClusterDelete,
 		CustomizeDiff: resourceClusterDiff,
-		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:        schema.TypeString,
-				Description: `the name of the cluster. corresponds to the --name flag on the kind cli.`,
-				Required:    true,
-				ForceNew:    true,
-			},
-			"config": {
-				Type:        schema.TypeString,
-				Description: `the cluster config as documented on https://kind.sigs.k8s.io/docs/user/configuration/`,
-				Optional:    true,
-				ForceNew:    true,
-			},
-			"image": {
-				Type:        schema.TypeString,
-				Description: `The image to use for the kind nodes. corresponds to the --image flag on the cli.`,
-				Optional:    true,
-				ForceNew:    true,
-			},
-			"kubeconfig": {
-				Type:        schema.TypeString,
-				Description: `The full text of the kubeconfig that can be used to connect to this cluster`,
-				Computed:    true,
-			},
-			"nodes": {
-				Type:        schema.TypeList,
-				Description: `The list of nodes that were provisioned for this cluster`,
-				Computed:    true,
-				Elem:        nodeSchema(),
-			},
-		},
+		Schema: resourceClusterSchema(),
 	}
 }
 
@@ -73,7 +43,7 @@ func resourceClusterRead(ctx context.Context, data *schema.ResourceData, m inter
 	if !exists {
 		return
 	}
-	setComputedResources(meta, name, data)
+	setClusterAttributeData(meta, name, data)
 	return
 }
 
@@ -96,6 +66,17 @@ func resourceClusterCreate(ctx context.Context, data *schema.ResourceData, m int
 	if v, ok := data.GetOk("image"); ok {
 		image := strings.TrimSpace(v.(string))
 		copts = append(copts, cluster.CreateWithNodeImage(image))
+	} else if v,ok := data.GetOk("image_version"); ok {
+		version := strings.TrimSpace(v.(string))
+		image,ok := clusterImage[version]
+		if !ok {
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  fmt.Sprintf("no pre-defined node image for kubernetes version %s", version),
+			})
+			return
+		}
+		copts = append(copts, cluster.CreateWithNodeImage(image))
 	}
 	if err := meta.Provider.Create(name, copts...); err != nil {
 		diags = append(diags, diag.Diagnostic{
@@ -105,30 +86,8 @@ func resourceClusterCreate(ctx context.Context, data *schema.ResourceData, m int
 		})
 		return
 	}
-	diags = append(diags, setComputedResources(meta, name, data)...)
+	diags = append(diags, setClusterAttributeData(meta, name, data)...)
 	data.SetId(meta.id(name))
-	return
-}
-
-func setComputedResources(c *Meta, name string, data *schema.ResourceData) (diags diag.Diagnostics) {
-	kubeconfig, err := c.getKubeConfig(name)
-	if err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  fmt.Sprintf("could not export kubeconfig for cluster %q", name),
-			Detail:   err.Error(),
-		})
-	}
-	_ = data.Set("kubeconfig", kubeconfig)
-	nodes, err := c.getKindNodeList(name)
-	if err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  fmt.Sprintf("could not list nodes of cluster %q", name),
-			Detail:   err.Error(),
-		})
-	}
-	_ = data.Set("nodes", nodes)
 	return
 }
 
