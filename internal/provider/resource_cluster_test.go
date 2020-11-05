@@ -18,8 +18,8 @@ func TestAccCluster(t *testing.T) {
 			{
 				Config: testAccClusterConfig(t, ""),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("kind_cluster.new","nodes.0.name","test-control-plane"),
-					resource.TestCheckResourceAttr("kind_cluster.new","nodes.0.role","control-plane"),
+					resource.TestCheckResourceAttr("kind_cluster.new", "nodes.0.name", "test-control-plane"),
+					resource.TestCheckResourceAttr("kind_cluster.new", "nodes.0.role", "control-plane"),
 				),
 			},
 			{
@@ -32,14 +32,14 @@ nodes:
 - role: worker
 `),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("kind_cluster.new","name"),
-					resource.TestCheckResourceAttrSet("kind_cluster.new","kubeconfig"),
-					resource.TestCheckResourceAttr("kind_cluster.new","nodes.0.name","test-control-plane"),
-					resource.TestCheckResourceAttr("kind_cluster.new","nodes.0.role","control-plane"),
-					resource.TestCheckResourceAttr("kind_cluster.new","nodes.1.name","test-worker"),
-					resource.TestCheckResourceAttr("kind_cluster.new","nodes.1.role","worker"),
-					resource.TestCheckResourceAttr("kind_cluster.new","nodes.2.name","test-worker2"),
-					resource.TestCheckResourceAttr("kind_cluster.new","nodes.2.role","worker"),
+					resource.TestCheckResourceAttrSet("kind_cluster.new", "name"),
+					resource.TestCheckResourceAttrSet("kind_cluster.new", "kubeconfig"),
+					resource.TestCheckResourceAttr("kind_cluster.new", "nodes.0.name", "test-control-plane"),
+					resource.TestCheckResourceAttr("kind_cluster.new", "nodes.0.role", "control-plane"),
+					resource.TestCheckResourceAttr("kind_cluster.new", "nodes.1.name", "test-worker"),
+					resource.TestCheckResourceAttr("kind_cluster.new", "nodes.1.role", "worker"),
+					resource.TestCheckResourceAttr("kind_cluster.new", "nodes.2.name", "test-worker2"),
+					resource.TestCheckResourceAttr("kind_cluster.new", "nodes.2.role", "worker"),
 				),
 			},
 		},

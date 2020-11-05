@@ -60,7 +60,7 @@ func (m *Meta) getKindNodeList(name string) ([]map[string]interface{}, error) {
 	}
 	// so we get a predictable order
 	sort.Slice(nodes, func(i, j int) bool {
-		return strings.Compare(nodes[i].String(),nodes[j].String()) < 0
+		return strings.Compare(nodes[i].String(), nodes[j].String()) < 0
 	})
 	return mapKindNodeList(nodes)
 }

@@ -1,7 +1,7 @@
 package provider
 
 // https://github.com/kubernetes-sigs/kind/releases/tag/v0.9.0
-var clusterImage = map[string]string {
+var clusterImage = map[string]string{
 	"1.19": "kindest/node:v1.19.1@sha256:98cf5288864662e37115e362b23e4369c8c4a408f99cbc06e58ac30ddc721600",
 	"1.18": "kindest/node:v1.18.8@sha256:f4bcc97a0ad6e7abaf3f643d890add7efe6ee4ab90baeb374b4f41a4c95567eb",
 	"1.17": "kindest/node:v1.17.11@sha256:5240a7a2c34bf241afb54ac05669f8a46661912eab05705d660971eeb12f6555",

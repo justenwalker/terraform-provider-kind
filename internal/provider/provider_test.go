@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	testClusterName = "test"
+	testClusterName           = "test"
 	testClusterKubeConfigPath = "./testdata/kind-config"
 )
 

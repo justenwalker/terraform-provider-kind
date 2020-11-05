@@ -21,9 +21,9 @@ func TestAccDataSourceCluster(t *testing.T) {
 				},
 				Config: testAccCheckClusterDataSource(),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("data.kind_cluster.new","name"),
-					resource.TestCheckResourceAttrSet("data.kind_cluster.new","kubeconfig"),
-					resource.TestCheckResourceAttrSet("data.kind_cluster.new","nodes"),
+					resource.TestCheckResourceAttrSet("data.kind_cluster.new", "name"),
+					resource.TestCheckResourceAttrSet("data.kind_cluster.new", "kubeconfig"),
+					resource.TestCheckResourceAttrSet("data.kind_cluster.new", "nodes"),
 				),
 			},
 		},

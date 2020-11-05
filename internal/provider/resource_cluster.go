@@ -15,7 +15,7 @@ func resourceCluster() *schema.Resource {
 		CreateContext: resourceClusterCreate,
 		DeleteContext: resourceClusterDelete,
 		CustomizeDiff: resourceClusterDiff,
-		Schema: resourceClusterSchema(),
+		Schema:        resourceClusterSchema(),
 	}
 }
 
@@ -66,9 +66,9 @@ func resourceClusterCreate(ctx context.Context, data *schema.ResourceData, m int
 	if v, ok := data.GetOk("image"); ok {
 		image := strings.TrimSpace(v.(string))
 		copts = append(copts, cluster.CreateWithNodeImage(image))
-	} else if v,ok := data.GetOk("image_version"); ok {
+	} else if v, ok := data.GetOk("image_version"); ok {
 		version := strings.TrimSpace(v.(string))
-		image,ok := clusterImage[version]
+		image, ok := clusterImage[version]
 		if !ok {
 			diags = append(diags, diag.Diagnostic{
 				Severity: diag.Error,
