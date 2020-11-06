@@ -46,6 +46,7 @@ func setClusterAttributesSchema(s map[string]*schema.Schema) map[string]*schema.
 	s["client_key_data"] = stringAttribute(`The base64-encoded client private key data for connecting the cluster`)
 	s["context"] = stringAttribute("The name of the context in KubeConfig")
 	s["kubeconfig"] = stringAttribute(`The full text of the kubeconfig that can be used to connect to this cluster`)
+	s["kubeconfig_internal"] = stringAttribute(`The full text of the kubeconfig that can be used to connect to this cluster from inside the container network`)
 	s["nodes"] = &schema.Schema{
 		Type:        schema.TypeList,
 		Description: `The list of nodes that were provisioned for this cluster`,
@@ -53,11 +54,17 @@ func setClusterAttributesSchema(s map[string]*schema.Schema) map[string]*schema.
 		Elem:        nodeSchema(),
 	}
 	s["server"] = stringAttribute(`Kubernetes API Server URL`)
+	s["control_plane_containers"] = &schema.Schema{
+		Type:        schema.TypeList,
+		Description: `The list of control-plane node container names`,
+		Computed:    true,
+		Elem:        &schema.Schema{Type: schema.TypeString},
+	}
 	return s
 }
 
 func setClusterAttributeData(c *Meta, name string, data *schema.ResourceData) (diags diag.Diagnostics) {
-	kubeconfig, err := c.getKubeConfig(name)
+	kubeconfig, err := c.Provider.KubeConfig(name, false)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -72,15 +79,22 @@ func setClusterAttributeData(c *Meta, name string, data *schema.ResourceData) (d
 			Detail:   err.Error(),
 		})
 	}
-	nodes, err := c.getKindNodeList(name)
+	kubeconfigInt, err := c.Provider.KubeConfig(name, true)
 	if err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  fmt.Sprintf("could not export internal kubeconfig for cluster %q", name),
+			Detail:   err.Error(),
+		})
+	}
+	data.Set("kubeconfig_internal", kubeconfigInt)
+	if err := c.setKindNodes(name, data); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  fmt.Sprintf("could not list nodes of cluster %q", name),
 			Detail:   err.Error(),
 		})
 	}
-	_ = data.Set("nodes", nodes)
 	return
 }
 

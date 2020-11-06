@@ -48,7 +48,9 @@ resource "kind_cluster" "new" {
 - **client_certificate_data** (String, Read-only) The base64-encoded client certificate data for connecting the cluster
 - **client_key_data** (String, Read-only) The base64-encoded client private key data for connecting the cluster
 - **context** (String, Read-only) The name of the context in KubeConfig
+- **control_plane_containers** (List of String, Read-only) The list of control-plane node container names
 - **kubeconfig** (String, Read-only) The full text of the kubeconfig that can be used to connect to this cluster
+- **kubeconfig_internal** (String, Read-only) The full text of the kubeconfig that can be used to connect to this cluster from inside the container network
 - **nodes** (List of Object, Read-only) The list of nodes that were provisioned for this cluster (see [below for nested schema](#nestedatt--nodes))
 - **server** (String, Read-only) Kubernetes API Server URL
 

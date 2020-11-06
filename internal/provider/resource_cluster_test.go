@@ -34,6 +34,8 @@ nodes:
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("kind_cluster.new", "name"),
 					resource.TestCheckResourceAttrSet("kind_cluster.new", "kubeconfig"),
+					resource.TestCheckResourceAttrSet("kind_cluster.new", "kubeconfig_internal"),
+					resource.TestCheckResourceAttr("kind_cluster.new", "control_plane_containers.0", "test-control-plane"),
 					resource.TestCheckResourceAttr("kind_cluster.new", "nodes.0.name", "test-control-plane"),
 					resource.TestCheckResourceAttr("kind_cluster.new", "nodes.0.role", "control-plane"),
 					resource.TestCheckResourceAttr("kind_cluster.new", "nodes.1.name", "test-worker"),

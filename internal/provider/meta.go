@@ -2,7 +2,9 @@ package provider
 
 import (
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"sigs.k8s.io/kind/pkg/cluster"
+	"sigs.k8s.io/kind/pkg/cluster/constants"
 	"sort"
 	"strings"
 )
@@ -49,18 +51,27 @@ func (m *Meta) deleteCluster(name string) error {
 	return m.Provider.Delete(name, m.KubeConfigPath)
 }
 
-func (m *Meta) getKubeConfig(name string) (string, error) {
-	return m.Provider.KubeConfig(name, false)
-}
-
-func (m *Meta) getKindNodeList(name string) ([]map[string]interface{}, error) {
-	nodes, err := m.Provider.ListNodes(name)
+func (m *Meta) setKindNodes(name string, data *schema.ResourceData) error {
+	ns, err := m.Provider.ListNodes(name)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	// so we get a predictable order
-	sort.Slice(nodes, func(i, j int) bool {
-		return strings.Compare(nodes[i].String(), nodes[j].String()) < 0
+	sort.Slice(ns, func(i, j int) bool {
+		return strings.Compare(ns[i].String(), ns[j].String()) < 0
 	})
-	return mapKindNodeList(nodes)
+	nodes, err := mapKindNodeList(ns)
+	if err != nil {
+		return err
+	}
+	var cps []string
+	for _, node := range nodes {
+		if role := node["role"].(string); role == constants.ControlPlaneNodeRoleValue {
+			name := node["name"].(string)
+			cps = append(cps, name)
+		}
+	}
+	_ = data.Set("nodes", nodes)
+	_ = data.Set("control_plane_containers", cps)
+	return nil
 }
