@@ -46,6 +46,21 @@ func Provider() *schema.Provider {
 				Default:     -1,
 				Optional:    true,
 			},
+			"http_proxy": {
+				Type:        schema.TypeString,
+				Description: "Override the HTTPS proxy used when provisioning kind clusters.",
+				Optional:    true,
+			},
+			"https_proxy": {
+				Type:        schema.TypeString,
+				Description: "Override the HTTP proxy used when provisioning kind clusters.",
+				Optional:    true,
+			},
+			"no_proxy": {
+				Type:        schema.TypeString,
+				Description: "Override the NO_PROXY list used when provisioning kind clusters.",
+				Optional:    true,
+			},
 		},
 		ConfigureContextFunc: configureProviderMeta,
 	}
@@ -59,6 +74,15 @@ func configureProviderMeta(ctx context.Context, data *schema.ResourceData) (inte
 	}
 	if v, ok := data.GetOk("kubeconfig"); ok {
 		meta.KubeConfigPath = v.(string)
+	}
+	if v, ok := data.GetOk("http_proxy"); ok {
+		meta.HTTPProxy = v.(string)
+	}
+	if v, ok := data.GetOk("https_proxy"); ok {
+		meta.HTTPSProxy = v.(string)
+	}
+	if v, ok := data.GetOk("no_proxy"); ok {
+		meta.NoProxy = v.(string)
 	}
 	var verbosity log.Level
 	if v, ok := data.GetOk("verbosity"); ok {

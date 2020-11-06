@@ -78,7 +78,7 @@ func resourceClusterCreate(ctx context.Context, data *schema.ResourceData, m int
 		}
 		copts = append(copts, cluster.CreateWithNodeImage(image))
 	}
-	if err := meta.Provider.Create(name, copts...); err != nil {
+	if err := meta.createCluster(name, copts...); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  fmt.Sprintf("failed to create cluster %q", name),

@@ -72,6 +72,7 @@ provider "kind" {
 	provider = "docker"
 	kubeconfig = "{{ .KubeConfig }}"
 	verbosity = 0
+	no_proxy  = "localhost,localhost.localdomain"
 }
 resource "kind_cluster" "new" {
 	name = "{{ .Name }}"
