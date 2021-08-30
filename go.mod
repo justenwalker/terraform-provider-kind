@@ -1,6 +1,6 @@
 module github.com/justenwalker/terraform-provider-kind
 
-go 1.15
+go 1.16
 
 require (
 	github.com/hashicorp/go-cty v1.4.1-0.20200414143053-d3edf31b6320
