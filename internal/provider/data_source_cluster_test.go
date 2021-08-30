@@ -2,6 +2,7 @@ package provider
 
 import (
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"sigs.k8s.io/kind/pkg/cluster"
 	"testing"
 
@@ -13,7 +14,10 @@ func TestAccDataSourceCluster(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactories,
-		CheckDestroy:      testAccCheckClusterDestroy,
+		CheckDestroy: func(state *terraform.State) error {
+			destroyTestCluster()
+			return nil
+		},
 		Steps: []resource.TestStep{
 			{
 				PreConfig: func() {
