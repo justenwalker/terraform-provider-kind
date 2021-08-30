@@ -6,9 +6,9 @@ Terraform provider for managing [Kind](https://kind.sigs.k8s.io/) clusters (Kube
 Requirements
 ------------
 
--	[Terraform](https://www.terraform.io/downloads.html) >= 0.12.x
--	[Go](https://golang.org/doc/install) >= 1.12
--   [Docker](https://www.docker.com/)
+- [Terraform](https://www.terraform.io/downloads.html) >= 0.12.x
+- [Go](https://golang.org/doc/install) >= 1.12
+- [Docker](https://www.docker.com/)
 
 Building The Provider
 ---------------------
